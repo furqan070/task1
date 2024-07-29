@@ -1,44 +1,49 @@
 import random
-import string
 
-def generate_password(length, use_uppercase, use_digits, use_special_chars):
-    # Define the character sets based on user preferences
-    characters = string.ascii_lowercase  # Always include lowercase letters
+def play_round():
+    choices = ['rock', 'paper', 'scissors']
+    computer_choice = random.choice(choices)
+    user_choice = input("Enter your choice (rock/paper/scissors): ").lower()
 
-    if use_uppercase:
-        characters += string.ascii_uppercase
-    if use_digits:
-        characters += string.digits
-    if use_special_chars:
-        characters += "!@#$%^&*()-_=+[]{}|;:',.<>?/~`"
-    
-    # Ensure that the characters set is not empty
-    if not characters:
-        raise ValueError("No character types selected for password generation.")
-    
-    # Generate the password
-    password = ''.join(random.choice(characters) for _ in range(length))
-    return password
+    if user_choice in choices:
+        print("Computer's choice:", computer_choice)
+        if user_choice == computer_choice:
+            print("It's a tie!")
+            return 'tie'
+        elif (user_choice == 'rock' and computer_choice == 'scissors') or \
+             (user_choice == 'scissors' and computer_choice == 'paper') or \
+             (user_choice == 'paper' and computer_choice == 'rock'):
+            print("You win!")
+            return 'user'
+        else:
+            print("Computer wins!")
+            return 'computer'
+    else:
+        print("Invalid choice! Please enter rock, paper, or scissors.")
+        return 'invalid'
 
 def main():
-    # User input for password length
-    while True:
-        try:
-            length = int(input("Enter the desired password length: "))
-            if length <= 0:
-                raise ValueError("Length must be a positive integer.")
-            break
-        except ValueError as e:
-            print(f"Invalid input: {e}. Please enter a positive integer.")
+    rounds = int(input("Enter the number of rounds you want to play: "))
+    user_score = 0
+    computer_score = 0
+    
+    for round_num in range(1, rounds + 1):
+        print(f"Round {round_num}:")
+        result = play_round()
+        if result == 'user':
+            user_score += 1
+        elif result == 'computer':
+            computer_score += 1
 
-    # User input for password complexity
-    use_uppercase = input("Include uppercase letters? (yes/no): ").strip().lower() == 'yes'
-    use_digits = input("Include digits? (yes/no): ").strip().lower() == 'yes'
-    use_special_chars = input("Include special characters? (yes/no): ").strip().lower() == 'yes'
+        print(f"User Score: {user_score}, Computer Score: {computer_score}")
 
-    # Generate and display the password
-    password = generate_password(length, use_uppercase, use_digits, use_special_chars)
-    print("Generated password:", password)
+    print("Game over!")
+    if user_score > computer_score:
+        print("Congratulations! You win the game!")
+    elif user_score < computer_score:
+        print("Sorry! Computer wins the game!")
+    else:
+        print("It's a tie!")
 
 if _name_ == "_main_":
     main()
